@@ -17,19 +17,31 @@ public:
     }
     static Combinator CON, OPX, DUP, ERA, NUM, VCON, VAR;
 
+    enum class CombinatorType {
+        CON,
+        OPX,
+        DUP,
+        ERA,
+        NUM,
+        VCON,
+        VAR
+    };
+
 private:
-    Combinator(Type t) : _type(t) {}
+    Combinator(Type t, CombinatorType ct) : _type(t), _combinatorType(ct) {}
     Type _type;
+    CombinatorType _combinatorType;
+
 };
 
 // Static member definitions
-Combinator Combinator::CON = Combinator(Type::Binary);
-Combinator Combinator::OPX = Combinator(Type::Binary);
-Combinator Combinator::DUP = Combinator(Type::Binary);
-Combinator Combinator::ERA = Combinator(Type::Nullary);
-Combinator Combinator::NUM = Combinator(Type::Nullary);
-Combinator Combinator::VCON = Combinator(Type::Binary);
-Combinator Combinator::VAR = Combinator(Type::Unary);
+Combinator Combinator::CON = Combinator(Type::Binary, CombinatorType::CON);
+Combinator Combinator::OPX = Combinator(Type::Binary, CombinatorType::OPX);
+Combinator Combinator::DUP = Combinator(Type::Binary, CombinatorType::DUP);
+Combinator Combinator::ERA = Combinator(Type::Nullary, CombinatorType::ERA);
+Combinator Combinator::NUM = Combinator(Type::Nullary, CombinatorType::NUM);
+Combinator Combinator::VCON = Combinator(Type::Binary, CombinatorType::VCON);
+Combinator Combinator::VAR = Combinator(Type::Unary, CombinatorType::VAR);
 
 enum class Operation {
     ANNI,
@@ -46,11 +58,9 @@ enum class Operation {
 struct CombinatorPairComparator {
     bool operator()(const std::pair<Combinator, Combinator>& lhs, const std::pair<Combinator, Combinator>& rhs) const {
         // Compare the first Combinator
-        if (lhs.first.type() != rhs.first.type()) {
-            return lhs.first.type() < rhs.first.type();
+        if (lhs.first.combinatorType() != rhs.first.combinatorType()) {
+            return lhs.first.combinatorType() < rhs.first.combinatorType();
         }
-        // If the first Combinators are the same, compare the second Combinator
-        return lhs.second.type() < rhs.second.type();
     }
 };
 
